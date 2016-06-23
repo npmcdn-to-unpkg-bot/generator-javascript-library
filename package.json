@@ -1,6 +1,6 @@
 {
   "name": "generator-javascript-library",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Yeoman generator to build an open source javascript library with babel, webpack, nyc, travis-ci, codecov.io, commitizen, semantic-release...",
   "homepage": "http://github.com/BenoitAverty/generator-javascript-library",
   "author": {
