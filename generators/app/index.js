@@ -58,13 +58,24 @@ module.exports = yeoman.Base.extend({
   },
   writing: function () {
     this.fs.copyTpl(
-      this.templatePath('**/*'),
+      this.templatePath('**/[^_]*'),
       this.destinationPath(''),
       this.props
     );
+
+    // dot files must be renamed or they would be processed as part of the generator library itself
+    const dotfiles = ['babelrc', 'eslintrc', 'gitignore', 'npmignore', 'travis.yml'];
+    dotfiles.forEach(f => {
+      this.fs.copyTpl(
+        this.templatePath(`_${f}`),
+        this.destinationPath(`.${f}`),
+        this.props
+      );
+    });
+
     this.fs.copyTpl(
-      this.templatePath('**/.*'),
-      this.destinationPath(''),
+      this.templatePath('_package.json'),
+      this.destinationPath('package.json'),
       this.props
     );
   },
