@@ -1,17 +1,21 @@
-const yeoman = require('yeoman-generator');
-const chalk = require('chalk');
-const path = require('path');
-const mkdirp = require('mkdirp');
-const camelcase = require('camelcase');
-const gitConfig = require('git-config');
+'use strict';
+
+var yeoman = require('yeoman-generator');
+var chalk = require('chalk');
+var path = require('path');
+var mkdirp = require('mkdirp');
+var camelcase = require('camelcase');
+var gitConfig = require('git-config');
 
 module.exports = yeoman.Base.extend({
-  initializing: function () {
+  initializing: function initializing() {
     this.props = {};
     this.gitc = gitConfig.sync();
     this.gitc.user = this.gitc.user || {};
   },
-  prompting: function () {
+  prompting: function prompting() {
+    var _this = this;
+
     // Have Yeoman greet the user.
     this.log('Welcome to the ' + chalk.blue('javascript-library') + ' generator!');
 
@@ -20,7 +24,9 @@ module.exports = yeoman.Base.extend({
       name: 'libraryName',
       message: 'What is the name of your library (your github repo should have the same name)?',
       default: path.basename(process.cwd()),
-      validate: v => v !== null && v !== undefined && v !== ''
+      validate: function validate(v) {
+        return v !== null && v !== undefined && v !== '';
+      }
     }, {
       type: 'input',
       name: 'libraryDesc',
@@ -29,13 +35,17 @@ module.exports = yeoman.Base.extend({
       type: 'input',
       name: 'githubUsername',
       message: 'What is your github username (or organisation)?',
-      default: (this.gitc.github) ? (this.gitc.github.user) : null,
-      validate: v => v !== null && v !== undefined && v !== ''
+      default: this.gitc.github ? this.gitc.github.user : null,
+      validate: function validate(v) {
+        return v !== null && v !== undefined && v !== '';
+      }
     }, {
       type: 'input',
       name: 'libraryAuthor',
       message: 'Who\'s the author of the library?',
-      default: answers => this.gitc.user.name || answers.githubUsername
+      default: function _default(answers) {
+        return _this.gitc.user.name || answers.githubUsername;
+      }
     }, {
       type: 'input',
       name: 'authorEmail',
@@ -52,19 +62,16 @@ module.exports = yeoman.Base.extend({
       default: true
     }];
 
-    return this.prompt(prompts).then(answers => {
-      Object.assign(this.props, answers, {
-        githubSlug: `${answers.githubUsername}/${answers.libraryName}`,
+    return this.prompt(prompts).then(function (answers) {
+      Object.assign(_this.props, answers, {
+        githubSlug: answers.githubUsername + '/' + answers.libraryName,
         camelCaseLibraryName: camelcase(answers.libraryName)
       });
     });
   },
-  default: function () {
+  default: function _default() {
     if (path.basename(this.destinationPath()) !== this.props.libraryName) {
-      this.log(
-        'Your generator must be inside a folder named ' + this.props.libraryName + '\n' +
-        'I\'ll automatically create this folder.'
-      );
+      this.log('Your generator must be inside a folder named ' + this.props.libraryName + '\n\n        I\'ll automatically create this folder.');
       mkdirp(this.props.name);
       this.destinationRoot(this.destinationPath(this.props.libraryName));
     }
@@ -79,55 +86,30 @@ module.exports = yeoman.Base.extend({
       local: require.resolve('generator-license')
     });
   },
-  writing: function () {
-    const files = [
-      'README.md',
-      '_babelrc',
-      '_eslintrc',
-      '_gitignore',
-      '_npmignore',
-      '_travis.yml'
-    ];
+  writing: function writing() {
+    var _this2 = this;
+
+    var files = ['README.md', '_babelrc', '_eslintrc', '_gitignore', '_npmignore', '_travis.yml'];
     if (this.props.umdBuild) {
       files.push('webpack.config.js');
     }
 
-    const dirs = [
-      '**/src/*',
-      '**/test/*'
-    ];
+    var dirs = ['**/src/*', '**/test/*'];
 
-    files.forEach(f => {
-      const destFile = f[0] === '_' ?
-        `.${f.substring(1)}` :
-        f;
+    files.forEach(function (f) {
+      var destFile = f[0] === '_' ? '.' + f.substring(1) : f;
 
-      this.fs.copyTpl(
-        this.templatePath(f),
-        this.destinationPath(destFile),
-        this.props
-      );
+      _this2.fs.copyTpl(_this2.templatePath(f), _this2.destinationPath(destFile), _this2.props);
     });
 
-    dirs.forEach(d => {
-      this.fs.copyTpl(
-        this.templatePath(d),
-        this.destinationPath(''),
-        this.props
-      );
+    dirs.forEach(function (d) {
+      _this2.fs.copyTpl(_this2.templatePath(d), _this2.destinationPath(''), _this2.props);
     });
 
-    this.fs.copyTpl(
-      this.templatePath('_package.json'),
-      this.destinationPath('package.json'),
-      this.props
-    );
+    this.fs.copyTpl(this.templatePath('_package.json'), this.destinationPath('package.json'), this.props);
   },
-  install: function () {
+  install: function install() {
     this.log(this.props.libraryName);
     this.npmInstall();
-  },
-  end: function () {
-
   }
 });
