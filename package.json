@@ -19,6 +19,7 @@
   "dependencies": {
     "camelcase": "^3.0.0",
     "chalk": "^1.0.0",
+    "generator-license": "^4.0.0",
     "yeoman-generator": "^0.23.0"
   },
   "devDependencies": {

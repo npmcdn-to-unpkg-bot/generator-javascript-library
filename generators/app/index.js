@@ -16,17 +16,17 @@ module.exports = yeoman.Base.extend({
       type: 'input',
       name: 'libraryName',
       message: 'What is the name of your library (your github repo should have the same name)?',
-      default: path.basename(process.cwd())
+      default: path.basename(process.cwd()),
+      required: true
     }, {
       type: 'input',
       name: 'libraryDesc',
-      message: 'Write a short description for your library.',
-      default: ''
+      message: 'Write a short description for your library.'
     }, {
       type: 'input',
       name: 'githubUsername',
       message: 'What is your github username (or organisation)?',
-      default: ''
+      required: true
     }, {
       type: 'input',
       name: 'libraryAuthor',
@@ -34,9 +34,17 @@ module.exports = yeoman.Base.extend({
       default: answers => answers.githubUsername
     }, {
       type: 'input',
-      name: 'license',
-      message: 'Which license do you want for your library?',
-      default: 'MIT'
+      name: 'authorEmail',
+      message: 'What\'s the author\'s email adress?'
+    }, {
+      type: 'input',
+      name: 'authorWebsite',
+      message: 'What\'s the website of the author?'
+    }, {
+      type: 'confirm',
+      name: 'umdBuild',
+      message: 'Will you be releasing an umd build for the browser?',
+      default: true
     }];
 
     return this.prompt(prompts).then(answers => {
@@ -55,20 +63,51 @@ module.exports = yeoman.Base.extend({
       mkdirp(this.props.name);
       this.destinationRoot(this.destinationPath(this.props.libraryName));
     }
+
+    this.composeWith('license', {
+      options: {
+        name: this.props.libraryAuthor,
+        email: this.props.authorEmail,
+        website: this.props.authorWebsite
+      }
+    }, {
+      local: require.resolve('generator-license')
+    });
   },
   writing: function () {
-    this.fs.copyTpl(
-      this.templatePath('**/[^_]*'),
-      this.destinationPath(''),
-      this.props
-    );
+    const files = [
+      'README.md',
+      '_babelrc',
+      '_eslintrc',
+      '_gitignore',
+      '_npmignore',
+      '_travis.yml'
+    ];
+    if (this.props.umdBuild) {
+      files.push('webpack.config.js');
+    }
 
-    // dot files must be renamed or they would be processed as part of the generator library itself
-    const dotfiles = ['babelrc', 'eslintrc', 'gitignore', 'npmignore', 'travis.yml'];
-    dotfiles.forEach(f => {
+    const dirs = [
+      '**/src/*',
+      '**/test/*'
+    ];
+
+    files.forEach(f => {
+      const destFile = f[0] === '_' ?
+        `.${f.substring(1)}` :
+        f;
+
       this.fs.copyTpl(
-        this.templatePath(`_${f}`),
-        this.destinationPath(`.${f}`),
+        this.templatePath(f),
+        this.destinationPath(destFile),
+        this.props
+      );
+    });
+
+    dirs.forEach(d => {
+      this.fs.copyTpl(
+        this.templatePath(d),
+        this.destinationPath(''),
         this.props
       );
     });

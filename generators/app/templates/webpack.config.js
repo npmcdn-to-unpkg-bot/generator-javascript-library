@@ -5,7 +5,7 @@ module.exports = {
   output: {
     path: join(__dirname, 'dist'),
     libraryTarget: 'umd',
-    library: '<%- libraryName %>',
+    library: '<%- camelCaseLibraryName %>',
   },
   devtool: 'source-map',
   module: {
