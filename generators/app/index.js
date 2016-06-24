@@ -3,10 +3,13 @@ const chalk = require('chalk');
 const path = require('path');
 const mkdirp = require('mkdirp');
 const camelcase = require('camelcase');
+const gitConfig = require('git-config');
 
 module.exports = yeoman.Base.extend({
   initializing: function () {
     this.props = {};
+    this.gitc = gitConfig.sync();
+    this.gitc.user = this.gitc.user || {};
   },
   prompting: function () {
     // Have Yeoman greet the user.
@@ -17,7 +20,7 @@ module.exports = yeoman.Base.extend({
       name: 'libraryName',
       message: 'What is the name of your library (your github repo should have the same name)?',
       default: path.basename(process.cwd()),
-      required: true
+      validate: v => v !== null && v !== undefined && v !== ''
     }, {
       type: 'input',
       name: 'libraryDesc',
@@ -26,16 +29,18 @@ module.exports = yeoman.Base.extend({
       type: 'input',
       name: 'githubUsername',
       message: 'What is your github username (or organisation)?',
-      required: true
+      default: (this.gitc.github) ? (this.gitc.github.user) : null,
+      validate: v => v !== null && v !== undefined && v !== ''
     }, {
       type: 'input',
       name: 'libraryAuthor',
       message: 'Who\'s the author of the library?',
-      default: answers => answers.githubUsername
+      default: answers => this.gitc.user.name || answers.githubUsername
     }, {
       type: 'input',
       name: 'authorEmail',
-      message: 'What\'s the author\'s email adress?'
+      message: 'What\'s the author\'s email adress?',
+      default: this.gitc.user.email
     }, {
       type: 'input',
       name: 'authorWebsite',
