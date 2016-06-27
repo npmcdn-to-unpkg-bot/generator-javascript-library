@@ -58,7 +58,9 @@ npm install -g semantic-release-cli
 semantic-release-cli setup # in the repo folder
 ```
 
-###### Ready for the next step ?
+###### Ready for the next step? Release!
+
+**Important:** This will release a 1.0.0 version on NPM. See below if you're not ready.
 
 ```bash
 git add .
@@ -72,7 +74,7 @@ If everything was setup correctly, many magical things will happen:
  - A release will be created on github, along with the appropriate tag. A changelog will be generated describing the changes to the library.
  - Your library will be built and published on NPM. You can install it via `npm install` and dowload the browser build on npmcdn.com.
 
-**Important:** This will release a 1.0.0 version on NPM. If your library is not yet ready, it may be better to start with a 0.1.0 version. semantic-release does not support this, so you'll have to publish this version yourself. After commiting, before pushing, change the "version" field in package.json to 0.0.0 and run this:
+*This will release a 1.0.0 version on NPM.* If your library is not yet ready, it may be better to start with a 0.1.0 version. semantic-release does not support this, so you'll have to publish this version yourself. After commiting, before pushing, change the "version" field in package.json to 0.0.0 and run this:
 ```bash
 npm version minor
 npm publish
@@ -83,7 +85,9 @@ and then push including tags:
 git push origin master --tags
 ```
 
- ###### Other things that can be fun
+Don't worry, this is only for the first version. You can now forget about releases, semantic-release will do it for you.
+
+###### Other useful things
 
  - enable [greenkeeper.io](greenkeeper) on your repo to keep your dependencies up to date : `greenkeeper enable`
  - Install commitizen globally to simplify commits: `npm install -g commitizen && git cz`
@@ -122,3 +126,18 @@ The commit message is also validated to ensure you respect the format. This is i
 ## Inspiration
 
 This generator was built with a lot of inspiration from Kent C. Dodds video series about open source libraries. You can watch it [on egghead.io](https://egghead.io/courses/how-to-write-an-open-source-javascript-library) to better understand everything that's used with this generator.
+
+## Roadmap
+
+Here is a list of options and features that are planned for the future (in approximate order of priority)
+ - Add the option to CircleCI instead of Travis-CI
+ - Tests (for the generator)
+ - Add the option to use gulp instead of npm scripts
+ - Add the option to disable code coverage checking/reporting
+ - Add more options for code coverage publishing (coveralls instead of codecov.io for example)
+ - Add the option to use other testing frameworks instead of mocha (Tape or Jasmine come to mind)
+ - Better .gitignore and .npmignore
+ - Add all the parameters as options so that the generator plays better with others
+ - Add the option to use rollup instead of webpack (contribution welcome on this one, as I don't know rollup myself)
+ - Add the option to use other style guides for eslint instead of Airbnb
+ - Add the option to customize which badges are present in the readme
