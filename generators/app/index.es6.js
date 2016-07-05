@@ -122,7 +122,7 @@ module.exports = yeoman.Base.extend({
     );
   },
   install() {
-    this.log(this.props.libraryName);
+    this.log(`All done. Running npm install for ${this.props.libraryName}`);
     this.npmInstall();
   },
 });
