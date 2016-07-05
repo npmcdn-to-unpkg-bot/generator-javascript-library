@@ -33,14 +33,20 @@ yo javascript-library
 
 Javasript libraries often have their names in lower case with words separated with dashes (e.g.: symmetrical-happiness). This will also be the name of your library on npm. Don't put anything in your repo, the generator will do it for you.
 
-###### Init your repo locally and use the generator
+###### Set up you local workspace (Init your repo, install tools and use the generator)
 
 go somewhere convenient and set-up your workspace.
 
 ```bash
+# create the repo locally
 mkdir symmetrical-happiness && cd symmetrical-happiness
 git init
 git remote add origin https://github.com/YourUsername/symmetrical-happiness.git
+
+# Install tools
+npm install -g yo generator-javascript-library commitizen semantic-release-cli
+
+# Let's go!
 yo javascript-library
 ```
 
@@ -54,7 +60,6 @@ You can also register an account to [codecov.io](codecov.io) and add the reposit
 
 Prepare your releasing process :
 ```
-npm install -g semantic-release-cli
 semantic-release-cli setup # in the repo folder
 ```
 
@@ -64,7 +69,7 @@ semantic-release-cli setup # in the repo folder
 
 ```bash
 git add .
-./node_modules/.bin/git-cz # commit using commitizen. Choose the 'feat' commit type for the creation of your library!
+git cz # commit using commitizen. Choose the 'feat' commit type for the creation of your library!
 git push origin master
 ```
 
@@ -90,7 +95,6 @@ Don't worry, this is only for the first version. You can now forget about releas
 ###### Other useful things
 
  - enable [greenkeeper.io](greenkeeper) on your repo to keep your dependencies up to date : `greenkeeper enable`
- - Install commitizen globally to simplify commits: `npm install -g commitizen && git cz`
  - Adjust the coverage thresholds: change the numbers in package.json, in the `test:check-coverage` command.
 
 
