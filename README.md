@@ -77,7 +77,7 @@ If everything was setup correctly, many magical things will happen:
  - The newly created library will be present on github, ready to accept contributions (ok, this one is not so magical)
  - Travis-ci will start a build, test your library against node 4, 5 and 6, check code coverage and send it to codecov.io
  - A release will be created on github, along with the appropriate tag. A changelog will be generated describing the changes to the library.
- - Your library will be built and published on NPM. You can install it via `npm install` and dowload the browser build on npmcdn.com.
+ - Your library will be built and published on NPM. You can install it via `npm install` and dowload the browser build on unpkg.com.
 
 *This will release a 1.0.0 version on NPM.* If your library is not yet ready, it may be better to start with a 0.1.0 version. semantic-release does not support this, so you'll have to publish this version yourself. After commiting, before pushing, change the "version" field in package.json to 0.0.0 and run this:
 ```bash
